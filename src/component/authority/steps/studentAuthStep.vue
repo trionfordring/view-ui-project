@@ -11,10 +11,10 @@
         <div class="warp">
             <div class="form">
                 <span class="input-warp">
-                    <Input size="large" class="input" placeholder="填写学号">
+                    <Input v-model="id" size="large" class="input" placeholder="填写学号">
                         <Icon type="md-person" slot="prefix"/>
                     </Input>
-                    <Button type="primary" size="large" class="next" @click="next">完成认证 <Icon type="ios-arrow-forward" /></Button>
+                    <Button type="primary" size="large" class="next" @click="next" :loading="onLoading">完成认证 <Icon type="ios-arrow-forward" /></Button>
                 </span>
             </div>
             <div class="skip-warp">
@@ -26,19 +26,33 @@
 </template>
 
 <script>
+    import UserInfo from '../../../libs/UserInfo'
     export default {
         name: "studentAuthStep",
         data(){
             return{
-                showAlert:false
+                showAlert:false,
+                id:'',
+                onLoading:false
             }
         },
         methods:{
             next(){
-                this.$emit('next');
-                this.$Notice.info({
-                    title: '学生验证通过'
-                });
+                this.onLoading=true;
+                let that = this;
+                UserInfo.verifyStudent(this.id).then(()=>{
+                    this.$emit('next');
+                    this.$Notice.info({
+                        title: '学生验证通过',
+                        desc: '你已经完成了整个认证流程，解锁全部功能'
+                    });
+                }).catch(msg=>{
+                    that.$Message['error']({
+                        background: true,
+                        content: msg,
+                        duration:5
+                    });
+                }).finally(()=>that.onLoading=false);
             },skip(){
                 this.showAlert=false;
                 this.$emit('skip');

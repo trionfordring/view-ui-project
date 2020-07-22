@@ -8,6 +8,7 @@ import mailVerifyStep from "./component/authority/steps/mailVerifyStep";
 import studentAuthStep from "./component/authority/steps/studentAuthStep";
 import registerSuccessStep from "./component/authority/steps/registerSuccessStep";
 import mainPage from "./views/mainPage"
+import findbackBox from "./component/findbackBox";
 
 const routers = [
     {
@@ -60,6 +61,10 @@ const routers = [
                         component:registerSuccessStep
                     }
                 ]
+            },{
+                path:'find',
+                name:'findBack',
+                component:findbackBox
             }
         ]
     },{

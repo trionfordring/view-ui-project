@@ -6,6 +6,9 @@ const userDetailsURL = '/user/details';
 const loginURL = '/user/login';
 const registerURL = '/user/register';
 const nameExistURL = '/user/exist/';
+const mailSendURL = '/verify/mail';
+const mailVerifyURL='/verify/mail';
+const studentVerifyURL='/verify/student/';
 
 const axios = Axios.create({
     withCredentials:true,
@@ -113,9 +116,7 @@ async function register(name,password,captcha){
  * @param name
  */
 async function nameExist(name){
-    let formed = new FormData();
-    formed.append('name',name);
-    await axios.post(nameExistURL,formed).then(result=>{
+    await axios.post(nameExistURL+name).then(result=>{
         json = result.data;
     }).catch(error=>{
         json = error.response.data;
@@ -124,11 +125,74 @@ async function nameExist(name){
         if(200===json.status&&json.data.exist===true){
             resolve();
         }else {
-            reject();
+            reject(json.message);
         }
     });
 }
 
+/**
+ * 发送验证邮件
+ * @param mail
+ */
+async function mailSend(mail){
+    let formed = new FormData();
+    formed.append('mail',mail);
+    await axios.post(mailSendURL,formed).then(result=>{
+        json = result.data;
+    }).catch(error=>{
+        json = error.response.data;
+    });
+    return new Promise((resolve, reject) => {
+        if(200===json.status){
+            exp.user.email=mail;
+            resolve();
+        }else {
+            reject(json.message);
+        }
+    })
+}
+
+/**
+ * 验证邮箱
+ * @param captcha
+ */
+async function verifyMail(captcha){
+    let formed = new FormData();
+    formed.append('mail',exp.user.email);
+    formed.append('captcha',captcha);
+    await axios.patch(mailVerifyURL,formed).then(result=>{
+        json = result.data;
+    }).catch(error=>{
+        json = error.response.data;
+    });
+    return new Promise((resolve, reject) => {
+        if(200===json.status){
+            resolve();
+        }else {
+            reject(json.message);
+        }
+    });
+}
+
+/**
+ * 学生认证
+ * @param id
+ */
+async function verifyStudent(id){
+    await axios.post(studentVerifyURL+id).then(result=>{
+        json = result.data;
+    }).catch(error=>{
+        json = error.response.data;
+    });
+    return new Promise((resolve, reject) => {
+        if(200===json.status){
+            exp.user = Object.assign(exp.user,json.data);
+            resolve();
+        }else {
+            reject(json.message);
+        }
+    });
+}
 
 let exp = {
     hasLogin,
@@ -137,14 +201,17 @@ let exp = {
     register,
     nameExist,
     loginStatus:false,
+    mailSend,
+    verifyMail,
+    verifyStudent,
     user:{
-        username:String,
-        description:String,
-        studentId:String,
-        authorities:Array,
-        roles:Array,
-        email:String,
-        phone:String
+        username:'',
+        description:'',
+        studentId:'',
+        authorities:'',
+        roles:'',
+        email:'',
+        phone:''
     }
 };
 export default exp;

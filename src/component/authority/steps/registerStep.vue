@@ -41,6 +41,10 @@
                 let that = this;
                 UserInfo.register(this.name,this.password,this.verify).then(()=>{
                     that.$emit('next');
+                    that.$Notice.info({
+                        title: '注册成功',
+                        desc: '用户已经创建成功，你可以继续验证你的邮箱'
+                    });
                 }).catch(msg=>{
                     that.freshCaptcha();
                     that.$Message['error']({

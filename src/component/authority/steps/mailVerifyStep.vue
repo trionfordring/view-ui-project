@@ -3,13 +3,13 @@
         <h2><Icon type="md-brush" /> 验证邮箱</h2>
         <div class="warp">
             <div class="form">
-                <Input size="large" class="input" placeholder="输入邮箱中收到的验证码">
+                <Input v-model="captcha" size="large" class="input" placeholder="输入邮箱中收到的验证码">
                     <Icon type="md-mail" slot="prefix"/>
                 </Input><br>
                 <ButtonGroup size="large" class="button-group">
                     <Button type="warning" size="large" class="next" @click="back"> <Icon type="ios-arrow-back" /> 重新填写邮箱</Button>
                     <Button style="visibility: hidden" size="large"> a hide button that u can't see it </Button>
-                    <Button type="primary" size="large" class="next" @click="next">确认验证邮箱 <Icon type="ios-arrow-forward" /></Button>
+                    <Button type="primary" size="large" class="next" @click="next" :loading="onLoading">确认验证邮箱 <Icon type="ios-arrow-forward" /></Button>
                 </ButtonGroup>
 
             </div>
@@ -18,11 +18,34 @@
 </template>
 
 <script>
+    import UserInfo from '../../../libs/UserInfo'
     export default {
         name: "mailVerifyStep",
+        data(){
+          return{
+              captcha:'',
+              onLoading:false
+          }
+        },
         methods:{
             next(){
-                this.$emit('next');
+                this.onLoading = true;
+                let that = this;
+                UserInfo.verifyMail(this.captcha).then(()=>{
+                    that.$emit('next');
+                    that.$Notice.info({
+                        title: '邮箱验证成功',
+                        desc: '已经通过邮箱认证，你可以继续完成学生认证'
+                    });
+                }).catch(msg=>{
+                    that.$Message['error']({
+                        background: true,
+                        content: msg,
+                        duration:5
+                    });
+                }).finally(()=>{
+                    that.onLoading=false;
+                })
             },
             back(){
                 this.$emit('back');

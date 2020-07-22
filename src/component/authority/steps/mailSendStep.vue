@@ -14,7 +14,7 @@
                     <Input v-model="mail" size="large" class="input" placeholder="填写邮箱">
                         <Icon type="md-mail" slot="prefix"/>
                     </Input>
-                    <Button type="primary" size="large" class="next" @click="next">发送邮件 <Icon type="ios-arrow-forward" /></Button>
+                    <Button type="primary" size="large" class="next" @click="next" :loading="onLoading">发送邮件 <Icon type="ios-arrow-forward" /></Button>
                 </span>
             </div>
             <div class="skip-warp">
@@ -25,10 +25,12 @@
 </template>
 
 <script>
+    import UserInfo from '../../../libs/UserInfo'
     let localData={
         showAlert:false,
-        mail:''
-    }
+        mail:'',
+        onLoading:false
+    };
     export default {
         name: "mailSendStep",
         data(){
@@ -36,10 +38,22 @@
         },
         methods:{
             next(){
-                this.$emit('next');
-                this.$Notice.info({
-                    title: '邮箱验证',
-                    desc: '一封带有验证码的邮件已经发送到您的邮箱了，请查收。'
+                this.onLoading=true
+                let that = this;
+                UserInfo.mailSend(this.mail).then(()=>{
+                    that.$emit('next');
+                    that.$Notice.info({
+                        title: '邮箱验证',
+                        desc: '一封带有验证码的邮件已经发送到您的邮箱了，请查收。'
+                    });
+                }).catch(msg=>{
+                    that.$Message['error']({
+                        background: true,
+                        content: msg,
+                        duration:5
+                    });
+                }).finally(()=>{
+                    that.onLoading = false;
                 });
             },skip(){
                 this.showAlert=false;
