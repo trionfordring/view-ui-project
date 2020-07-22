@@ -15,8 +15,10 @@
   "author": "Aresn",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.19.2",
     "view-design": "^4.0.0",
     "vue": "^2.5.16",
+    "vue-axios": "^2.1.5",
     "vue-router": "^2.8.1"
   },
   "devDependencies": {
@@ -42,7 +44,7 @@
     "vue-loader": "^11.0.0",
     "vue-style-loader": "^1.0.0",
     "vue-template-compiler": "^2.2.1",
-    "webpack": "^2.2.1",
+    "webpack": "^2.7.0",
     "webpack-dev-server": "^2.4.1",
     "webpack-merge": "^3.0.0"
   },

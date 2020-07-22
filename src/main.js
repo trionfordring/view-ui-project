@@ -2,12 +2,15 @@ import Vue from 'vue';
 import ViewUI from 'view-design';
 import VueRouter from 'vue-router';
 import Routers from './router';
-import Util from './libs/util';
 import App from './app.vue';
+import Axios from "axios";
+import VueAxios from "vue-axios";
 import 'view-design/dist/styles/iview.css';
+import UserInfo from './libs/UserInfo'
 
 Vue.use(VueRouter);
 Vue.use(ViewUI);
+Vue.use(VueAxios,Axios)
 
 // 路由配置
 const RouterConfig = {
@@ -18,7 +21,6 @@ const router = new VueRouter(RouterConfig);
 
 router.beforeEach((to, from, next) => {
     ViewUI.LoadingBar.start();
-    Util.title(to.meta.title);
     next();
 });
 

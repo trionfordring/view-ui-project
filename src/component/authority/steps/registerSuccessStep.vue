@@ -1,13 +1,12 @@
-<style scoped lang="less">
-</style>
 <template>
-    <div>
-    </div>
+    
 </template>
+
 <script>
-    import UserInfo from "../libs/UserInfo";
+    import UserInfo from "../../../libs/UserInfo";
+
     export default {
-        name:"index",
+        name: "registerSuccessStep",
         mounted() {
             this.$Spin.show({
                 render: (h) => {
@@ -19,16 +18,15 @@
                                 size: 48
                             }
                         }),
-                        h('h3', 'Loading')
+                        h('h3', '正在前往主页面')
                     ])
                 }
             });
-            UserInfo.hasLogin().then(()=>{
-                this.$router.push({name:'mainPage'})
-            },()=>{
-                this.$router.push({name:"authority"});
-            });
+            this.$router.push({name:'mainPage'})
         }
-
     }
 </script>
+
+<style scoped>
+
+</style>

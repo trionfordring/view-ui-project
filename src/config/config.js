@@ -1,6 +1,6 @@
-import Env from './env';
+const host = 'https://fordring.icu';
 
 let config = {
-    env: Env
+    host
 };
 export default config;
