@@ -9,6 +9,8 @@ const nameExistURL = '/user/exist/';
 const mailSendURL = '/verify/mail';
 const mailVerifyURL='/verify/mail';
 const studentVerifyURL='/verify/student/';
+const logoutURL='/user/logout';
+const headURL = '/user/head';
 
 const axios = Axios.create({
     withCredentials:true,
@@ -17,8 +19,6 @@ const axios = Axios.create({
         "Content-Type":'application/x-www-form-urlencoded; charset=UTF-8'
     },
 });
-
-
 
 let json={
     status:200,
@@ -36,11 +36,12 @@ async function hasLogin(){
     });
     return new Promise(async (resolve, reject) => {
         exp.loginStatus = json.data.hasLogin;
+        exp.hasScanned = true;
         if(json.data.hasLogin){
             await freshUserInfo().then(()=>{
                 resolve();
-            }).catch((error)=>{
-                throw error;
+            }).catch(msg=>{
+                reject(msg)
             })
         }else {
             reject();
@@ -54,9 +55,17 @@ async function hasLogin(){
 async function freshUserInfo() {
     await axios.get(userDetailsURL).then(result=>{
         json = result.data;
-        exp.user = Object.assign(exp.user,json.data);
-    },()=>{
-        throw new Error("请求用户信息失败");
+    }).catch(error=>{
+        json = error.response.data;
+    });
+    return new Promise((resolve, reject) => {
+        if(200 === json.status){
+            exp.user = Object.assign(exp.user,json.data);
+            exp.loginStatus=true;
+            resolve();
+        }else{
+            reject(json.message);
+        }
     })
 }
 
@@ -73,7 +82,6 @@ async function login(name,password,remember) {
         json = result.data;
     }).catch(error=>{
         json = error.response.data;
-        console.log(error.response.data.message)
     });
     return new Promise((resolve, reject) => {
         if(200 === json.status){
@@ -194,6 +202,59 @@ async function verifyStudent(id){
     });
 }
 
+/**
+ * 用户退出登录
+ */
+async function logout(){
+    await axios.get(logoutURL).then(result=>{
+        json = result.data;
+    }).catch(error=>{
+        json = error.response.data;
+    });
+    return new Promise((resolve, reject) => {
+        if(200===json.status){
+            exp.loginStatus=false;
+            exp.hasScanned=false;
+            exp.user = Object.assign(exp.user,anonymous);
+            resolve();
+        }else {
+            reject(json.message);
+        }
+    });
+}
+
+/**
+ * 更新头像
+ * @param file
+ */
+async function updateHead(file){
+    let formed = new FormData();
+    formed.append('head',file);
+    await axios.put(headURL,formed).then(result=>{
+        json = result.data;
+    }).catch(error=>{
+        json = error.response.data;
+    });
+    return new Promise((resolve, reject) => {
+        if(200===json.status){
+            resolve();
+        }else {
+            reject(json.message);
+        }
+    });
+}
+
+const anonymous={
+    username:'未登录',
+    description:'无',
+    studentId:'未认证',
+    authorities:'无',
+    roles:'匿名',
+    email:'未认证',
+    phone:'未认证',
+    realName:'未认证'
+};
+
 let exp = {
     hasLogin,
     freshUserInfo,
@@ -204,14 +265,18 @@ let exp = {
     mailSend,
     verifyMail,
     verifyStudent,
+    logout,
+    updateHead,
     user:{
-        username:'',
-        description:'',
-        studentId:'',
-        authorities:'',
-        roles:'',
-        email:'',
-        phone:''
-    }
+        username:'未登录',
+        description:'无',
+        studentId:'未认证',
+        authorities:'无',
+        roles:'匿名',
+        email:'未认证',
+        phone:'未认证',
+        realName:'未认证'
+    },
+    hasScanned:false
 };
 export default exp;

@@ -30,10 +30,10 @@
     }
 </style>
 <template>
-    <div class="login-box">
+    <div class="login-box"  @keypress.enter="login">
         <Card class="login">
             <h1 slot="title"><Icon type="ios-body"/> 登录</h1>
-            <Input v-model="name" prefix="md-contact" size="large" class="input-login" placeholder="输入用户名"/><br>
+            <Input v-model="name" prefix="md-contact" size="large" class="input-login" placeholder="输入用户名" autofocus/><br>
             <Input v-model="password" prefix="md-key" size="large" class="input-login" type="password" placeholder="输入密码" password/><br>
             <div class="remember">
                 记住密码<Switch v-model="remember" size="large"/>
@@ -85,9 +85,9 @@
                 }).finally(()=>{
                     that.isLoading=false;
                 })
-
-
             }
+        },mounted() {
+            this.$Spin.hide();
         }
     }
 </script>

@@ -21,7 +21,8 @@ const router = new VueRouter(RouterConfig);
 
 router.beforeEach((to, from, next) => {
     ViewUI.LoadingBar.start();
-    next();
+    if(UserInfo.hasScanned) next();
+    else UserInfo.hasLogin().catch(()=>{}).finally(()=>next());
 });
 
 router.afterEach((to, from, next) => {

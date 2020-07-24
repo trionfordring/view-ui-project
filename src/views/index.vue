@@ -23,11 +23,16 @@
                     ])
                 }
             });
-            UserInfo.hasLogin().then(()=>{
-                this.$router.push({name:'mainPage'})
-            },()=>{
-                this.$router.push({name:"authority"});
-            });
+            if(UserInfo.hasScanned){
+                if(UserInfo.loginStatus)this.$router.push({name:'mainPage'});
+                else this.$router.push({name:"authority"});
+            }else {
+                UserInfo.hasLogin().then(()=>{
+                    this.$router.push({name:'mainPage'});
+                },()=>{
+                    this.$router.push({name:"authority"});
+                });
+            }
         }
 
     }

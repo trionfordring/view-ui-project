@@ -10,6 +10,7 @@
 <script>
     import authorityBar from "./authority/authorityBar";
     import StepsStatus from "../libs/StepsStatus";
+    import UserInfo from '../libs/UserInfo'
     var localData={
         step: 0,
         status: StepsStatus.PROCESS
@@ -22,6 +23,13 @@
             return localData;
         },mounted() {
             let that = this;
+            if(UserInfo.loginStatus===true){
+                this.step=1;
+                if(UserInfo.user.email.includes('@')){
+                    this.step=3;
+                    if(UserInfo.user.studentId!=='未认证')this.step=4;
+                }
+            }
             this.$router.replace({name:"register"+that.step})
         },watch:{
             step(value){

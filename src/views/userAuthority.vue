@@ -26,12 +26,14 @@
 </template>
 
 <script>
+    import UserInfo from '../libs/UserInfo'
+    let localData={
+        active:'login'
+    };
     export default {
         name: "userAuthority",
         data(){
-          return{
-              active:'login'
-          }
+          return localData;
         },
         methods:{
             selectMenu(name){
@@ -39,7 +41,8 @@
             }
         },mounted() {
             this.$Spin.hide();
-            this.$router.push({name:this.active})
+            if(UserInfo.hasScanned&&UserInfo.loginStatus) this.$route.replace({name:'mainPage'});
+            else this.$router.replace({name:this.active})
         }
     }
 </script>

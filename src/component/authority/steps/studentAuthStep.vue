@@ -8,10 +8,10 @@
             <p>只有完成了学生认证，才能发表图片和点赞噢!</p>
         </Modal>
         <h2><Icon type="md-brush" /> 学生认证</h2>
-        <div class="warp">
+        <div class="warp"  @keypress.enter="next">
             <div class="form">
                 <span class="input-warp">
-                    <Input v-model="id" size="large" class="input" placeholder="填写学号">
+                    <Input v-model="id" size="large" class="input" placeholder="填写学号" autofocus>
                         <Icon type="md-person" slot="prefix"/>
                     </Input>
                     <Button type="primary" size="large" class="next" @click="next" :loading="onLoading">完成认证 <Icon type="ios-arrow-forward" /></Button>

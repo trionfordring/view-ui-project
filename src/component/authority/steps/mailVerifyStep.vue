@@ -1,9 +1,9 @@
 <template>
     <Card class="card">
         <h2><Icon type="md-brush" /> 验证邮箱</h2>
-        <div class="warp">
+        <div class="warp"  @keypress.enter="next">
             <div class="form">
-                <Input v-model="captcha" size="large" class="input" placeholder="输入邮箱中收到的验证码">
+                <Input v-model="captcha" size="large" class="input" placeholder="输入邮箱中收到的验证码" autofocus>
                     <Icon type="md-mail" slot="prefix"/>
                 </Input><br>
                 <ButtonGroup size="large" class="button-group">
@@ -41,8 +41,14 @@
                     that.$Message['error']({
                         background: true,
                         content: msg,
+                        duration:4
+                    });
+                    that.$Message['error']({
+                        background: true,
+                        content: '验证失败,请重新发送验证码',
                         duration:5
                     });
+                    that.$emit('back');
                 }).finally(()=>{
                     that.onLoading=false;
                 })

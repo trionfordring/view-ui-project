@@ -1,9 +1,9 @@
 <template>
     <Card class="card">
         <h2><Icon type="md-brush" /> 填写注册信息</h2>
-        <div class="warp">
+        <div class="warp"  @keypress.enter="submit">
             <div class="form">
-                <Input v-model="name" size="large" class="input" placeholder="填写用户名">
+                <Input v-model="name" size="large" class="input" placeholder="填写用户名" autofocus>
                     <Icon type="md-contact" slot="prepend"/>
                 </Input>
                 <Input v-model="password" size="large" class="input" placeholder="填写密码" type="password" password>

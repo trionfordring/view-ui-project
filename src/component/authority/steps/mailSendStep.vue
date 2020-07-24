@@ -8,10 +8,10 @@
             <p>只有完成了学生认证，才能发表图片和点赞噢!</p>
         </Modal>
         <h2><Icon type="md-brush" /> 填写邮箱</h2>
-        <div class="warp">
+        <div class="warp" @keypress.enter="next">
             <div class="form">
                 <span class="input-warp">
-                    <Input v-model="mail" size="large" class="input" placeholder="填写邮箱">
+                    <Input v-model="mail" size="large" class="input" placeholder="填写邮箱" autofocus>
                         <Icon type="md-mail" slot="prefix"/>
                     </Input>
                     <Button type="primary" size="large" class="next" @click="next" :loading="onLoading">发送邮件 <Icon type="ios-arrow-forward" /></Button>
