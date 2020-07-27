@@ -9,6 +9,9 @@ import studentAuthStep from "./component/authority/steps/studentAuthStep";
 import registerSuccessStep from "./component/authority/steps/registerSuccessStep";
 import mainPage from "./views/mainPage"
 import findbackBox from "./component/findbackBox";
+import plateView from "./views/mainPage/plateView";
+import plateList from "./component/plateList";
+import imageList from "./component/imageList";
 
 const routers = [
     {
@@ -33,31 +36,29 @@ const routers = [
             },{
                 path: 'register',
                 name: 'register',
+                meta: {
+                    root:'/authority/register',
+                },
                 component: registerBox,
                 children:[
                     {
                         path:'0',
-                        name:'register0',
                         component:registerStep
                     },
                     {
                         path:'1',
-                        name:'register1',
                         component:mailSendStep
                     },
                     {
                         path:'2',
-                        name:'register2',
                         component:mailVerifyStep
                     },
                     {
                         path:'3',
-                        name:'register3',
                         component:studentAuthStep
                     },
                     {
                         path:'4',
-                        name:'register4',
                         component:registerSuccessStep
                     }
                 ]
@@ -69,8 +70,53 @@ const routers = [
         ]
     },{
         path:'/index',
+        name:'mainPage',
         component:mainPage,
-        name:'mainPage'
+        redirect:'/index/plate',
+        children:[
+            {
+                path: 'plate',
+                name: 'plate',
+                component: plateView,
+                redirect:'/index/plate/list',
+                children: [
+                    {
+                        path:'list',
+                        name:'plateList',
+                        component: plateList
+                    },{
+                        path: 'images/:id',
+                        name:'imageList',
+                        component: imageList
+                    }
+                ]
+            },{
+                path: 'authority',
+                name: 'continueAuthority',
+                meta:{
+                    root:'/index/authority',
+                },
+                component: registerBox,
+                children:[
+                    {
+                        path:'1',
+                        component:mailSendStep
+                    },
+                    {
+                        path:'2',
+                        component:mailVerifyStep
+                    },
+                    {
+                        path:'3',
+                        component:studentAuthStep
+                    },
+                    {
+                        path:'4',
+                        component:registerSuccessStep
+                    }
+                ]
+            }
+        ]
     }
 ];
 export default routers;

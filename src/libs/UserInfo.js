@@ -11,6 +11,8 @@ const mailVerifyURL='/verify/mail';
 const studentVerifyURL='/verify/student/';
 const logoutURL='/user/logout';
 const headURL = '/user/head';
+const updateDesURL = '/user/description';
+const getRoleByNameURL = '/role/';
 
 const axios = Axios.create({
     withCredentials:true,
@@ -24,7 +26,7 @@ let json={
     status:200,
     data:{},
     message:''
-}
+};
 
 /**
  * 如果用户已登录，resolve
@@ -60,7 +62,7 @@ async function freshUserInfo() {
     });
     return new Promise((resolve, reject) => {
         if(200 === json.status){
-            exp.user = Object.assign(exp.user,json.data);
+            exp.user = Object.assign(exp.user,anonymous,json.data);
             exp.loginStatus=true;
             resolve();
         }else{
@@ -244,15 +246,65 @@ async function updateHead(file){
     });
 }
 
+/**
+ * 更新简介
+ * @param des
+ */
+async function updateDescription(des) {
+    let formed = new FormData();
+    formed.append('description',des);
+    await axios.put(updateDesURL,formed).then(result=>{
+        json = result.data;
+    }).catch(error=>{
+        json = error.response.data;
+    });
+    return new Promise((resolve, reject) => {
+        if(200===json.status){
+            resolve(json.message);
+        }else {
+            reject(json.message);
+        }
+    });
+}
+
+/**
+ * 通过角色名查询角色
+ * @param name
+ */
+async function getRoleByName(name){
+    await axios.get(getRoleByNameURL+name).then(result=>{
+        json = result.data;
+    }).catch(error=>{
+        json = error.response.data;
+    });
+    return new Promise((resolve, reject) => {
+        if(200===json.status){
+            resolve(json.data,json.message);
+        }else {
+            reject(json.message);
+        }
+    });
+}
+
 const anonymous={
     username:'未登录',
     description:'无',
     studentId:'未认证',
-    authorities:'无',
-    roles:'匿名',
+    authorities:[],
+    roles:[
+        {
+            name:'ANONYMOUS',
+            description:'匿名'
+        }
+    ],
     email:'未认证',
     phone:'未认证',
-    realName:'未认证'
+    realName:'未认证',
+    hasAuthority(auth){
+        return exp.user.authorities.some(v=>{
+            return v.name===auth;
+        });
+    }
 };
 
 let exp = {
@@ -267,16 +319,9 @@ let exp = {
     verifyStudent,
     logout,
     updateHead,
-    user:{
-        username:'未登录',
-        description:'无',
-        studentId:'未认证',
-        authorities:'无',
-        roles:'匿名',
-        email:'未认证',
-        phone:'未认证',
-        realName:'未认证'
-    },
+    updateDescription,
+    getRoleByName,
+    user:Object.create(anonymous),
     hasScanned:false
 };
 export default exp;

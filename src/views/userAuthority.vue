@@ -41,7 +41,7 @@
             }
         },mounted() {
             this.$Spin.hide();
-            if(UserInfo.hasScanned&&UserInfo.loginStatus) this.$route.replace({name:'mainPage'});
+            if(UserInfo.hasScanned&&UserInfo.loginStatus) this.$router.replace({name:'mainPage'});
             else this.$router.replace({name:this.active})
         }
     }

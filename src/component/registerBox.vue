@@ -11,16 +11,15 @@
     import authorityBar from "./authority/authorityBar";
     import StepsStatus from "../libs/StepsStatus";
     import UserInfo from '../libs/UserInfo'
-    var localData={
-        step: 0,
-        status: StepsStatus.PROCESS
-    }
     export default {
         name: "registerBox",
         components:{
             authorityBar
         }, data(){
-            return localData;
+            return {
+                step: 0,
+                status: StepsStatus.PROCESS
+            };
         },mounted() {
             let that = this;
             if(UserInfo.loginStatus===true){
@@ -30,10 +29,10 @@
                     if(UserInfo.user.studentId!=='未认证')this.step=4;
                 }
             }
-            this.$router.replace({name:"register"+that.step})
+            this.jump(this.step);
         },watch:{
             step(value){
-                this.$router.replace({name:"register"+value});
+                this.jump(value);
                 this.status=StepsStatus.PROCESS;
             }
         },methods:{
@@ -43,6 +42,11 @@
                 this.step--;
             },skip(){
                 this.step=4;
+            },jump(step){
+                if(this.$router.currentRoute.meta.root)
+                    this.$router.push({path:this.$router.currentRoute.meta.root+'/'+step.toString()});
+                else
+                    this.$router.push({path:'./'+step.toString()});
             }
         }
     }

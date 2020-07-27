@@ -27,6 +27,7 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach((to, from, next) => {
     ViewUI.LoadingBar.finish();
+    ViewUI.Spin.hide();
     window.scrollTo(0, 0);
 });
 
