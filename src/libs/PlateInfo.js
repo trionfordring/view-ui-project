@@ -8,6 +8,13 @@ const platePostURL = '/plate';
 const getAllImageURL='/image/all/';
 const likeURL = '/image/like/';
 const dislikeURL = '/image/dislike/';
+const likeListURL = '/user/likes';
+const uploadImageURL = '/image';
+const getImageURL = '/image/';
+const getAllUserLikeImageURL ='/image/like/';
+const putCommentURL = '/comment/';
+const getCommentListURL = '/comment/';
+const getCommentDetailURL = '/comment/details/';
 
 const plateData = {
     id: '',
@@ -23,7 +30,22 @@ const plateData = {
         studentId: '',
         username: ''
     },
-    createTime: 0,
+    createTime: 0
+};
+
+const imageData={
+    id:'',name:'',createTime:'',likes:0,comments:0,description:'',
+    owner:{
+        username:'',email:'',studentId: ''
+    },plate:{
+        id: '',
+        name: '',
+        description: '',
+        startTime: 0,
+        endTime: 0,
+        createTime: 0,
+        ownerName:''
+    }
 };
 
 const axios = Axios.create({
@@ -147,13 +169,131 @@ async function disLike(iid){
     });
 }
 
+async function selfLikeList(){
+    await axios.get(likeListURL).then(result=>{
+        json = result.data;
+    }).catch(error=>{
+        json = error.response.data;
+    });
+    return new Promise((resolve, reject) => {
+        if(200===json.status){
+            resolve(json.data);
+        }else {
+            reject(json.message);
+        }
+    });
+}
+
+async function uploadImage(pid,name,description,file){
+    let formed = new FormData();
+    formed.append('name',name);
+    if(description)formed.append('description',description);
+    formed.append('image',file);
+    formed.append('pid',pid);
+    await axios.post(uploadImageURL,formed)
+        .then(result=>{json = result.data;})
+        .catch(error=>{json = error.response.data;});
+    return new Promise((resolve, reject) => {
+        if(200===json.status){
+            resolve(json.data);
+        }else {
+            reject(json.message);
+        }
+    });
+}
+
+async function getImage(iid){
+    await axios.get(getImageURL+iid).then(result=>{
+        json = result.data;
+    }).catch(error=>{
+        json = error.response.data;
+    });
+    return new Promise((resolve, reject) => {
+        if(200===json.status){
+            resolve(json.data);
+        }else {
+            reject(json.message);
+        }
+    });
+}
+
+async function getAllUserLikeImage(iid){
+    await axios.get(getAllUserLikeImageURL+iid).then(result=>{
+        json = result.data;
+    }).catch(error=>{
+        json = error.response.data;
+    });
+    return new Promise((resolve, reject) => {
+        if(200===json.status){
+            resolve(json.data);
+        }else {
+            reject(json.message);
+        }
+    });
+}
+
+async function putComment(comment,iid,parent){
+    let formed = new FormData();
+    formed.append('content',comment);
+    if(parent)formed.append('parent',parent);
+    await axios.post(putCommentURL+iid,formed).then(result=>{
+        json = result.data;
+    }).catch(error=>{
+        json = error.response.data;
+    });
+    return new Promise((resolve, reject) => {
+        if(200===json.status){
+            resolve(json.data);
+        }else {
+            reject(json.message);
+        }
+    });
+}
+
+async function getCommentList(iid){
+    await axios.get(getCommentListURL+iid).then(result=>{
+        json = result.data;
+    }).catch(error=>{
+        json = error.response.data;
+    });
+    return new Promise((resolve, reject) => {
+        if(200===json.status){
+            resolve(json.data);
+        }else {
+            reject(json.message);
+        }
+    });
+}
+
+async function getCommentDetails(cid){
+    await axios.get(getCommentDetailURL+cid).then(result=>{
+        json = result.data;
+    }).catch(error=>{
+        json = error.response.data;
+    });
+    return new Promise((resolve, reject) => {
+        if(200===json.status){
+            resolve(json.data);
+        }else {
+            reject(json.message);
+        }
+    });
+}
 
 let exp = {
     getAllPlate,
     plateData:plateData,
+    imageData:imageData,
     selectById,
     createPlate,
     getAllImages,
-    like,disLike
+    like,disLike,
+    selfLikeList,
+    uploadImage,
+    getImage,
+    getAllUserLikeImage,
+    putComment,
+    getCommentList,
+    getCommentDetails
 };
 export default exp;

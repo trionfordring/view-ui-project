@@ -102,7 +102,8 @@
 <script>
     import UserInfo from '../libs/UserInfo';
     import plateCreator from "../component/plateCreator";
-    const constHeadUrl = 'https://fordring.icu/user/head';
+    import config from "../config/config";
+    const constHeadUrl = config.host+'/user/head';
     let localData={
         showDrawer:false,
         readOnly:true,

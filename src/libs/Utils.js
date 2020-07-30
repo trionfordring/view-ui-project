@@ -1,3 +1,5 @@
+import ViewUI from 'view-design';
+
 let cnt = 0;
 let imported = [];
 
@@ -17,6 +19,48 @@ function importJs(path,onload) {
     document.head.appendChild(s);
 }
 
+function loading() {
+    ViewUI.Spin.show({
+        render: (h) => {
+            return h('div', [
+                h('Icon', {
+                    'style': 'animation: ani-demo-spin 0.6s linear infinite;',
+                    props: {
+                        type: 'ios-loading',
+                        size: 48
+                    }
+                }),
+                h('h3', 'Loading')
+            ])
+        }
+    });
+}
+
+function loadSuccess() {
+    ViewUI.Spin.hide();
+}
+
+function message(type,msg) {
+    ViewUI.Message[type]({
+        background: true,
+        content: msg,
+        duration:5
+    });
+}
+
+const TYPES={
+    ERROR: 'error',
+    INFO : 'info',
+    SUCCESS : 'success',
+    WARNING : 'warning',
+    LOADING : 'loading',
+}
+
+
 export default {
-    importJs
+    importJs,
+    loading,
+    loadSuccess,
+    message,
+    TYPES
 }

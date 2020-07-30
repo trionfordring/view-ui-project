@@ -32,11 +32,11 @@
         currentPage:1,
         pageSize:8,
         plateColumn:[
-            {title: '板块名',key:'name',tooltip:true},
-            {title: '简介',key:'description',tooltip:true},
+            {title: '板块名',key:'name'},
+            {title: '简介',key:'description'},
             {title: '起始时间',key:'startTime',slot: 'startTime',sortable: true},
             {title: '结束时间',key:'endTime',slot:'endTime',sortable: true},
-            {title: '创建者',key: 'ownerName',tooltip:true},
+            {title: '创建者',key: 'ownerName'},
             {title: '创建时间',key:'createTime',slot: 'createTime',sortable: true,sortType:'desc'}
         ]
     };
@@ -55,8 +55,25 @@
             },getRowStyle(){
                 return 'row-style';
             },fresh(){
+                let that = this;
+                this.$Spin.show({
+                    render: (h) => {
+                        return h('div', [
+                            h('Icon', {
+                                'style': 'animation: ani-demo-spin 0.6s linear infinite;',
+                                props: {
+                                    type: 'ios-loading',
+                                    size: 48
+                                }
+                            }),
+                            h('h3', 'Loading')
+                        ])
+                    }
+                });
                 PlateInfo.getAllPlate().then(data=>{
                     this.plateList=data.plates;
+                }).finally(()=>{
+                    this.$Spin.hide();
                 })
             }
         },watch:{
@@ -79,5 +96,7 @@
 <style>
     .ivu-table .row-style td{
         cursor: pointer;
+        word-wrap: break-word;
+        word-break: break-all;
     }
 </style>

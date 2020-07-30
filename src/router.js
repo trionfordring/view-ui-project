@@ -12,6 +12,7 @@ import findbackBox from "./component/findbackBox";
 import plateView from "./views/mainPage/plateView";
 import plateList from "./component/plateList";
 import imageList from "./component/imageList";
+import imageView from "./views/mainPage/imageView";
 
 const routers = [
     {
@@ -88,6 +89,10 @@ const routers = [
                         path: 'images/:id',
                         name:'imageList',
                         component: imageList
+                    },{
+                        path: 'image/:id',
+                        name:'image',
+                        component: imageView
                     }
                 ]
             },{

@@ -24,7 +24,7 @@
             <Row>
                 <Col span="4" offset="1"><p><span>简介:</span></p></Col>
                 <Col span="16">
-                    <Input v-model="newPlate.description" maxlength="254" show-word-limit :autosize="{minRows:4,maxRows:14}" placeholder="输入简介" type="textarea"></Input>
+                    <Input v-model="description" maxlength="254" show-word-limit :autosize="{minRows:4,maxRows:14}" placeholder="输入简介" type="textarea"></Input>
                 </Col>
             </Row>
             <br>
@@ -49,6 +49,7 @@
         },data(){
             return{
                 newPlate:Object.create(PlateInfo.plateData),
+                description:'',
                 dateArray:null
             }
         },methods:{
@@ -58,6 +59,7 @@
                 this.close();
             },submit(){
                 let that = this;
+                this.newPlate.description=this.description;
                 PlateInfo.createPlate(this.newPlate).then(msg=>{
                     that.$Message['success']({
                         background: true,
@@ -73,6 +75,9 @@
                     });
                 }).finally(()=>that.close());
             },freshPlateList(){
+                this.description='';
+                this.dateArray=[];
+                this.newPlate=Object.create(PlateInfo.plateData);
                 this.$emit('fresh-plate-list');
             }
         },watch:{
